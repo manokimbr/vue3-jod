@@ -1,0 +1,19 @@
+{
+  "hierarchy": [
+    {
+      "file": "App.vue"
+    },
+    {
+      "file": "main.js"
+    },
+    {
+      "folder": "plugins",
+      "children": [
+        {
+          "file": "plugins/vuetify.js"
+        }
+      ]
+    }
+  ],
+  "treeView": "📁 src/\n├── App.vue\n├── main.js\n└── plugins\n\n│   └── vuetify.js"
+}

@@ -1,5 +1,5 @@
 {
-  "scannedAt": "2025-07-16T23:02:22.772Z",
+  "scannedAt": "2025-07-16T23:41:29.117Z",
   "components": [
     {
       "file": "src/App.vue",
@@ -51,5 +51,6 @@
   ],
   "vuetifyMissing": [
     "VAlert"
-  ]
+  ],
+  "vuetifyStatus": "⚠️ Some Vuetify components are used but not registered."
 }

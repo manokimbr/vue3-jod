@@ -7,7 +7,8 @@ import {
   VContainer,
   VCard,
   VCardTitle,
-  VCardText
+  VCardText,
+  // VAlert,
 } from 'vuetify/components'
 
 export const vuetify = createVuetify({
@@ -17,7 +18,8 @@ export const vuetify = createVuetify({
     VContainer,
     VCard,
     VCardTitle,
-    VCardText
+    VCardText,
+    // VAlert,
   },
   icons: {
     defaultSet: 'mdi',
