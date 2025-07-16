@@ -1,0 +1,55 @@
+{
+  "scannedAt": "2025-07-16T23:02:22.772Z",
+  "components": [
+    {
+      "file": "src/App.vue",
+      "templateTags": [
+        "template",
+        "v-app",
+        "v-main",
+        "v-container",
+        "v-card",
+        "v-card-title",
+        "v-card-text",
+        "v-alert",
+        "div",
+        "p",
+        "strong",
+        "script"
+      ],
+      "scriptAPIs": [
+        "ref",
+        "onMounted",
+        "fetch"
+      ],
+      "description": "Vue component"
+    },
+    {
+      "file": "src/main.js",
+      "exports": [],
+      "description": "JS utility or plugin"
+    },
+    {
+      "file": "src/plugins/vuetify.js",
+      "exports": [],
+      "description": "JS utility or plugin"
+    }
+  ],
+  "plugins": [
+    "vuetify.js"
+  ],
+  "envVars": [
+    "VITE_API_BASE"
+  ],
+  "vuetifyRegistered": [
+    "VApp",
+    "VCard",
+    "VCardText",
+    "VCardTitle",
+    "VContainer",
+    "VMain"
+  ],
+  "vuetifyMissing": [
+    "VAlert"
+  ]
+}

@@ -84,6 +84,13 @@ And displays something like:
 
 ---
 
+## 🧠 Self-awareness
+
+vue3-jod includes a lightweight brain script that scans its own structure;
+
+```bash
+npm run brain
+
 ## 🌐 Related Projects
 
 - 🔌 [node-jod (backend)](https://github.com/manokimbr/node-jod) — Native Node.js 22 API server
