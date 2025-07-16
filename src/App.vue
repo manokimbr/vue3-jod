@@ -1,66 +1,40 @@
 <template>
-    <div class="app">
-      <h1>🧬 Vue3-JOD Interface</h1>
-      <p>Frontend is live and connected to Node-JOD backend.</p>
-  
-      <div v-if="pingData" class="result">
-        <h2>🔗 API Response:</h2>
-        <pre>{{ pingData }}</pre>
-      </div>
-  
-      <div v-else-if="error">
-        <p class="error">⚠️ Error: {{ error }}</p>
-      </div>
-  
-      <div v-else>
-        <p>Loading backend ping...</p>
-      </div>
-    </div>
-  </template>
-  
-  <script setup>
-  import { ref, onMounted } from 'vue'
-  
-  const pingData = ref(null)
-  const error = ref(null)
-  const apiBase = import.meta.env.VITE_API_BASE
-  
-  onMounted(async () => {
-    try {
-      const res = await fetch(`${apiBase}/api/ping`)
-      if (!res.ok) throw new Error('API error')
-      pingData.value = await res.json()
-    } catch (err) {
-      error.value = err.message
-    }
-  })
-  </script>
-  
-  <style>
-  body {
-    font-family: 'Inter', sans-serif;
-    margin: 0;
-    padding: 2rem;
-    background: #111;
-    color: #eee;
+  <v-app>
+    <v-main>
+      <v-container class="fill-height d-flex flex-column align-center justify-center">
+        <v-card class="pa-6" elevation="12" max-width="500">
+          <v-card-title class="text-h5 text-center">
+            🧬 Vue3-JOD Interface
+          </v-card-title>
+          <v-card-text>
+            <div v-if="loading">Loading backend status...</div>
+            <div v-else>
+              <p><strong>Message:</strong> {{ apiData.message }}</p>
+              <p><strong>Version:</strong> {{ apiData.version }}</p>
+              <p><strong>Env:</strong> {{ apiData.env }}</p>
+              <p><strong>Port:</strong> {{ apiData.port }}</p>
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-container>
+    </v-main>
+  </v-app>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+
+const apiData = ref({})
+const loading = ref(true)
+
+onMounted(async () => {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE}/api/ping`)
+    apiData.value = await response.json()
+  } catch (err) {
+    apiData.value = { message: 'Failed to reach backend 💥' }
+  } finally {
+    loading.value = false
   }
-  h1 {
-    color: #5ef1a1;
-  }
-  .result {
-    margin-top: 2rem;
-    background: #1a1a1a;
-    padding: 1rem;
-    border-radius: 8px;
-  }
-  pre {
-    background: #222;
-    padding: 1rem;
-    overflow: auto;
-  }
-  .error {
-    color: #ff6565;
-    font-weight: bold;
-  }
-  </style>
-  
+})
+</script>

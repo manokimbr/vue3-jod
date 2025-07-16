@@ -21,7 +21,10 @@
   },
   "homepage": "https://github.com/manokimbr/vue3-jod#readme",
   "dependencies": {
-    "vue": "^3.5.17"
+    "sass": "^1.89.2",
+    "sass-loader": "^16.0.5",
+    "vue": "^3.5.17",
+    "vuetify": "^3.9.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.0",
