@@ -1,0 +1,22 @@
+# Node modules
+node_modules/
+
+# Build output
+dist/
+
+# Vite cache
+.vite/
+
+# Local env files
+.env
+.env.*
+
+# IDEs
+.vscode/
+.idea/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+package-lock.json
