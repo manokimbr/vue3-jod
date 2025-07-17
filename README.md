@@ -4,6 +4,7 @@
 [![Vite](https://img.shields.io/badge/vite-ready-purple?logo=vite)](https://vitejs.dev/)
 [![Vuetify](https://img.shields.io/badge/ui-vuetify%203-blueviolet?logo=vuetify)](https://vuetifyjs.com/)
 [![Backend](https://img.shields.io/badge/API-node--jod-blue?logo=node.js)](https://github.com/manokimbr/node-jod)
+[![Self-aware](https://img.shields.io/badge/self--awareness-brain🧠-lightblue)](./jod/Brain.md)
 
 > A sleek Vue 3 frontend powered by Vite + Vuetify to interact with the blazing-fast native Node.js 22 backend [node-jod](https://github.com/manokimbr/node-jod)
 
@@ -41,7 +42,7 @@ Set your environment variables in `.env` or `.env.dev`:
 VITE_API_BASE=http://localhost:3001
 ```
 
-Or use the deployed backend:
+Or use the deployed backend while it's open:
 
 ```env
 VITE_API_BASE=https://node-jod.onrender.com
