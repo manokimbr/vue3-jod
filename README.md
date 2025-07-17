@@ -29,13 +29,13 @@ npm install
 npm run dev
 ````
 
-> Make sure your backend (`node-jod`) is running at the defined `VITE_API_BASE`.
+> Make sure your backend ([node-jod](https://github.com/manokimbr/node-jod)) is running at the defined `VITE_API_BASE`.
 
 ---
 
 ## 🔌 API Integration
 
-Configure `.env` or `.env.dev`:
+Set your environment variables in `.env` or `.env.dev`:
 
 ```env
 VITE_API_BASE=http://localhost:3001
@@ -51,13 +51,13 @@ VITE_API_BASE=https://node-jod.onrender.com
 
 ## 🧪 Example Output
 
-When loaded, the app fetches from:
+The app fetches:
 
-```
+```http
 GET /api/ping
 ```
 
-And displays something like:
+Response:
 
 ```json
 {
@@ -68,9 +68,9 @@ And displays something like:
 
 ---
 
-## 📁 Structure
+## 📁 Project Structure
 
-```bash
+```txt
 .
 ├── public/
 │   └── favicon.ico
@@ -81,29 +81,44 @@ And displays something like:
 │       └── vuetify.js
 ├── .env / .env.dev
 └── vite.config.js
+```
 
 ---
 
 ## 🧠 Self-awareness
 
-vue3-jod includes a lightweight brain script that scans its own structure;
+vue3-jod includes a lightweight brain that understands itself.
 
 ```bash
 npm run brain
+```
+
+Generates:
+
+* `structure.json` → folder & file tree
+* `frontendMemory.json` → components, plugins, env, Vuetify stats
+* `structure.txt` → ASCII-readable folder map
+
+Perfect for devs, docs, and AI agents. 🤖
+
+---
 
 ## 🌐 Related Projects
 
-- 🔌 [node-jod (backend)](https://github.com/manokimbr/node-jod) — Native Node.js 22 API server
-- 🧬 [Live API](https://node-jod.onrender.com/api/ping) — `/api/ping` endpoint (JSON response)
+* 🔌 [node-jod (backend)](https://github.com/manokimbr/node-jod) — Native Node.js 22 API server
+* 🧬 [Live API](https://node-jod.onrender.com/api/ping) — `/api/ping` endpoint (JSON response)
 
 ---
 
 ## 👤 Author
 
-Built with Vue 3 by [@manokimbr](https://github.com/manokimbr)
+Made by [@manokimbr](https://github.com/manokimbr)
+
+[![GitHub followers](https://img.shields.io/github/followers/manokimbr?label=Follow\&style=social)](https://github.com/manokimbr)
+[![Twitter](https://img.shields.io/badge/X-@manokimbr-black?logo=x)](https://twitter.com/manokimbr)
 
 ---
 
 ## 📄 License
 
-MIT
+This project is open-source under the [MIT License](./.LICENSE)
