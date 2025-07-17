@@ -7,8 +7,8 @@
             🧬 Vue3-JOD Interface
           </v-card-title>
           <v-card-text>
-            <v-alert type="error" title="⚠️ Test Alert">
-              This is an unregistered Vuetify component!
+            <v-alert type="success" title="✅ Test Success">
+              This is a properly registered Vuetify component!
             </v-alert>
             <div v-if="loading">Loading backend status...</div>
             <div v-else>

@@ -1,5 +1,5 @@
 {
-  "scannedAt": "2025-07-16T23:41:29.117Z",
+  "scannedAt": "2025-07-17T00:22:57.105Z",
   "components": [
     {
       "file": "src/App.vue",
@@ -42,6 +42,7 @@
     "VITE_API_BASE"
   ],
   "vuetifyRegistered": [
+    "VAlert",
     "VApp",
     "VCard",
     "VCardText",
@@ -49,8 +50,5 @@
     "VContainer",
     "VMain"
   ],
-  "vuetifyMissing": [
-    "VAlert"
-  ],
-  "vuetifyStatus": "⚠️ Some Vuetify components are used but not registered."
+  "vuetifyStatus": "✅ All Vuetify components used in templates are registered."
 }
