@@ -13,7 +13,21 @@
           "file": "plugins/vuetify.js"
         }
       ]
+    },
+    {
+      "folder": "themes",
+      "children": [
+        {
+          "file": "themes/dark.js"
+        },
+        {
+          "file": "themes/index.js"
+        },
+        {
+          "file": "themes/light.js"
+        }
+      ]
     }
   ],
-  "treeView": "📁 src/\n├── App.vue\n├── main.js\n└── plugins\n\n│   └── vuetify.js"
+  "treeView": "📁 src/\n├── App.vue\n├── main.js\n├── plugins\n\n│   └── vuetify.js\n└── themes\n\n│   ├── dark.js\n│   ├── index.js\n│   └── light.js"
 }

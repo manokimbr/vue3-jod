@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/manokimbr/vue3-jod#readme",
   "dependencies": {
+    "@mdi/font": "^7.4.47",
     "sass": "^1.89.2",
     "sass-loader": "^16.0.5",
     "vue": "^3.5.17",

@@ -1,11 +1,16 @@
 {
-  "scannedAt": "2025-07-17T00:22:57.105Z",
+  "scannedAt": "2025-07-18T01:59:01.974Z",
   "components": [
     {
       "file": "src/App.vue",
       "templateTags": [
         "template",
         "v-app",
+        "v-app-bar",
+        "v-toolbar-title",
+        "v-spacer",
+        "v-btn",
+        "v-icon",
         "v-main",
         "v-container",
         "v-card",
@@ -15,10 +20,13 @@
         "div",
         "p",
         "strong",
+        "v-divider",
+        "h4",
         "script"
       ],
       "scriptAPIs": [
         "ref",
+        "computed",
         "onMounted",
         "fetch"
       ],
@@ -33,6 +41,21 @@
       "file": "src/plugins/vuetify.js",
       "exports": [],
       "description": "JS utility or plugin"
+    },
+    {
+      "file": "src/themes/dark.js",
+      "exports": [],
+      "description": "JS utility or plugin"
+    },
+    {
+      "file": "src/themes/index.js",
+      "exports": [],
+      "description": "JS utility or plugin"
+    },
+    {
+      "file": "src/themes/light.js",
+      "exports": [],
+      "description": "JS utility or plugin"
     }
   ],
   "plugins": [
@@ -44,11 +67,17 @@
   "vuetifyRegistered": [
     "VAlert",
     "VApp",
+    "VAppBar",
+    "VBtn",
     "VCard",
     "VCardText",
     "VCardTitle",
     "VContainer",
-    "VMain"
+    "VDivider",
+    "VIcon",
+    "VMain",
+    "VSpacer",
+    "VToolbarTitle"
   ],
   "vuetifyStatus": "✅ All Vuetify components used in templates are registered."
 }

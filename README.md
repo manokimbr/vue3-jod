@@ -14,10 +14,17 @@
 
 - ⚡ Vue 3 + Vite
 - 🎨 Vuetify 3 styling
-- 🔗 Fetches `/api/ping` from the backend
-- 🌐 Uses `.env` to configure backend URL
-- 🧬 Custom favicon included
-- 🛡️ CORS ready on the backend
+- 🔌 Fetches `/api/ping` from the backend
+- 🌐 Reads `.env` to configure backend URL
+- 🧠 Awareness-Driven UI (Frontend Self-awareness)
+- 🧬 System Info: user agent, platform, timezone, CPU cores, etc
+- 📱 Device Awareness: screen width, device type, touch, inactivity
+- 🧪 Performance Metrics: FPS, JS Heap usage
+- 🌓 Smart Theme: system preference detection + persistent dark/light toggle
+- 💾 LocalStorage: theme + anonymous ID
+- 🧹 Button to clear localStorage
+- ✅ Zero external UI dependencies beyond Vuetify
+- 🛡️ Backend CORS ready
 
 ---
 
@@ -68,7 +75,6 @@ Response:
 ```
 
 ---
-
 ## 📁 Project Structure
 
 ```txt
@@ -76,10 +82,18 @@ Response:
 ├── public/
 │   └── favicon.ico
 ├── src/
-│   ├── App.vue
-│   ├── main.js
-│   └── plugins/
-│       └── vuetify.js
+│   ├── App.vue               # Awareness dashboard + Vuetify UI
+│   ├── main.js               # App entrypoint
+│   ├── plugins/
+│   │   └── vuetify.js        # Vuetify configuration
+│   └── themes/               # Custom theme definitions
+│       ├── index.js
+│       ├── dark.js
+│       └── light.js
+├── jod/
+│   └── memory/
+│       ├── frontendMemory.json   # Self-awareness output (components, plugins, env)
+│       └── structure.json        # Folder & file layout of frontend
 ├── .env / .env.dev
 └── vite.config.js
 ```

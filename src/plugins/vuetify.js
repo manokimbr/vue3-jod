@@ -1,6 +1,7 @@
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import { aliases, mdi } from 'vuetify/iconsets/mdi'
+import { themes } from '../themes'
 import {
   VApp,
   VMain,
@@ -9,6 +10,12 @@ import {
   VCardTitle,
   VCardText,
   VAlert,
+  VAppBar,
+  VBtn,
+  VIcon,
+  VSpacer,
+  VToolbarTitle,
+  VDivider
 } from 'vuetify/components'
 
 export const vuetify = createVuetify({
@@ -20,6 +27,12 @@ export const vuetify = createVuetify({
     VCardTitle,
     VCardText,
     VAlert,
+    VAppBar,
+    VBtn,
+    VIcon,
+    VSpacer,
+    VToolbarTitle,
+    VDivider
   },
   icons: {
     defaultSet: 'mdi',
@@ -28,5 +41,6 @@ export const vuetify = createVuetify({
   },
   theme: {
     defaultTheme: 'dark',
+    themes
   },
 })
