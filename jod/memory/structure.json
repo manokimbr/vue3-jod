@@ -27,7 +27,15 @@
           "file": "themes/light.js"
         }
       ]
+    },
+    {
+      "folder": "utils",
+      "children": [
+        {
+          "file": "utils/devMetrics.js"
+        }
+      ]
     }
   ],
-  "treeView": "📁 src/\n├── App.vue\n├── main.js\n├── plugins\n\n│   └── vuetify.js\n└── themes\n\n│   ├── dark.js\n│   ├── index.js\n│   └── light.js"
+  "treeView": "📁 src/\n├── App.vue\n├── main.js\n├── plugins\n\n│   └── vuetify.js\n├── themes\n\n│   ├── dark.js\n│   ├── index.js\n│   └── light.js\n└── utils\n\n│   └── devMetrics.js"
 }
