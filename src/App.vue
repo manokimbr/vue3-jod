@@ -1,30 +1,64 @@
+<!-- AwarenessPanel.vue -->
 <template>
-  <v-app>
-    <!-- App Bar -->
-    <v-app-bar color="primary" dark>
-      <v-toolbar-title>🧠 vue3-jod</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn icon @click="toggleTheme" :title="`Switch to ${nextTheme} mode`">
-        <v-icon>
-          {{ currentTheme === 'dark' ? 'mdi-white-balance-sunny' : 'mdi-weather-night' }}
-        </v-icon>
-      </v-btn>
-    </v-app-bar>
-
-    <!-- Main -->
-    <v-main>
-      <v-container class="fill-height d-flex flex-column align-center justify-center">
-        <v-card class="pa-6" elevation="12" max-width="700">
-          <v-card-title class="text-h5 text-center">
-            🧬 Awareness-Driven Frontend
+  <!--
+    Layout shell
+    - fluid + no-gutters keeps content edge-to-edge on mobile while preserving the grid.
+    - One column: simple and responsive (we handle typography via classes below).
+  -->
+  <v-container class="pa-0" fluid>
+    <v-row no-gutters>
+      <v-col cols="12">
+        <!--
+          Card presentation strategy:
+          - Elevation only on Desktop to suggest "panel" without adding mobile shadow noise.
+          - Classes are chosen at runtime based on deviceType (from the composable) instead of media queries,
+            which keeps behavior consistent with SSR/Edge (no flash across hydration).
+          - Max width constrains readability on large screens.
+        -->
+        <v-card
+          :elevation="deviceType === 'Desktop' ? 12 : 0"
+          :class="[
+            'w-100',
+            deviceType === 'Desktop' ? 'pa-6 mx-auto mt-10 desktop-card' : 'pa-6 rounded-0',
+            deviceType === 'Tablet' ? 'tablet-card' : '',
+            deviceType === 'Mobile' ? 'mobile-card' : ''
+          ]"
+          :max-width="deviceType === 'Desktop' ? 720 : undefined"
+        >
+          <!--
+            Title sizing:
+            - We bump size on Mobile to keep it readable at arm’s length.
+          -->
+          <v-card-title
+            class="text-center"
+            :class="deviceType === 'Mobile' ? 'text-h4' : 'text-h5'"
+          >
+            🧼 Awareness-Driven Frontend
           </v-card-title>
 
           <v-card-text>
-            <v-alert type="success" title="✅ Vuetify OK" class="mb-4">
+            <!--
+              Smoke test alert:
+              - Confirms Vuetify is wired and components render.
+              - Good for first-run diagnostics.
+            -->
+            <v-alert type="success" title="✅ Vuetify OK" class="mb-6">
               Vuetify components are functional.
             </v-alert>
 
-            <div v-if="loading">🤖 Handshaking with backend...</div>
+            <!--
+              Backend handshake:
+              - aria-live="polite" announces loading status to screen readers without being intrusive.
+              - We keep the skeleton simple to avoid extra component registrations here.
+            -->
+            <div v-if="loading" class="text-center text-subtitle-1 mb-6" aria-live="polite">
+              🤖 Handshaking with backend...
+            </div>
+
+            <!--
+              When the ping resolves, we show env/version for quick ops visibility.
+              - This leverages strict VITE_API_BASE handling inside the composable.
+            -->
             <div v-else>
               <p><strong>Message:</strong> {{ apiData.message }}</p>
               <p><strong>Version:</strong> {{ apiData.version }}</p>
@@ -32,15 +66,27 @@
               <p><strong>Port:</strong> {{ apiData.port }}</p>
             </div>
 
-            <v-divider class="my-4"></v-divider>
-            <h4 class="text-subtitle-1 mb-2">📱 Device Awareness</h4>
+            <v-divider class="my-6" />
+
+            <!--
+              Device Awareness:
+              - All values come from the composable, which is SSR/Edge-safe (no window/navigator at module top).
+              - We prefer runtime detection over CSS-only to keep logic in one place.
+            -->
+            <h4 class="text-h6 mb-2">📱 Device Awareness</h4>
             <p><strong>Device Type:</strong> {{ deviceType }}</p>
             <p><strong>Screen Width:</strong> {{ screenWidth }}px</p>
             <p><strong>Touch Support:</strong> {{ hasTouch ? 'Yes' : 'No' }}</p>
             <p><strong>Inactive for:</strong> {{ inactivitySeconds }} seconds</p>
 
-            <v-divider class="my-4"></v-divider>
-            <h4 class="text-subtitle-1 mb-2">🧠 System Awareness</h4>
+            <v-divider class="my-6" />
+
+            <!--
+              System Awareness:
+              - These are user/system preferences and signals that often guide UI decisions (animations, theme, etc.).
+              - The composable listens to media queries + online/offline events and cleans up on unmount.
+            -->
+            <h4 class="text-h6 mb-2">🧐 System Awareness</h4>
             <p><strong>System Prefers:</strong> {{ systemPrefers }}</p>
             <p><strong>Reduced Motion:</strong> {{ prefersReducedMotion }}</p>
             <p><strong>Language:</strong> {{ language }}</p>
@@ -48,167 +94,142 @@
             <p><strong>Do Not Track:</strong> {{ dnt }}</p>
             <p><strong>Online:</strong> {{ isOnline ? 'Yes' : 'No' }}</p>
 
-            <v-divider class="my-4"></v-divider>
-            <h4 class="text-subtitle-1 mb-2">🧪 System Info</h4>
+            <v-divider class="my-6" />
+
+            <!--
+              System Info:
+              - `platform` prefers UA-CH (Chromium) with a safe fallback, so Safari/Firefox may show "Unknown".
+              - `memory` and heap metrics degrade gracefully on non-Chromium; UI remains functional.
+            -->
+            <h4 class="text-h6 mb-2">📊 System Info</h4>
             <p><strong>User Agent:</strong> {{ userAgent }}</p>
             <p><strong>Platform:</strong> {{ platform }}</p>
             <p><strong>Device Memory:</strong> {{ memory }} GB</p>
             <p><strong>CPU Cores:</strong> {{ cpuCores }}</p>
 
-            <v-divider class="my-4"></v-divider>
-            <h4 class="text-subtitle-1 mb-2">📦 LocalStorage</h4>
+            <v-divider class="my-6" />
+
+            <!--
+              LocalStorage:
+              - Exposes a coarse theme and a local anonymous ID (for demos/labs).
+              - The "Clear LocalStorage" helper also reloads the page to reflect a clean state.
+            -->
+            <h4 class="text-h6 mb-2">📦 LocalStorage</h4>
             <p><strong>Theme:</strong> {{ localStorageTheme }}</p>
             <p><strong>Anon ID:</strong> {{ anonId }}</p>
-            <v-btn color="error" size="small" class="mt-2" @click="clearLocalStorage">🧹 Clear LocalStorage</v-btn>
+            <v-btn color="error" size="x-large" class="mt-4" @click="clearLocalStorage">
+              🧹 Clear LocalStorage
+            </v-btn>
 
-            <v-divider class="my-4"></v-divider>
-            <h4 class="text-subtitle-1 mb-2">📊 Browser Performance</h4>
+            <v-divider class="my-6" />
+
+            <!--
+              Browser Performance:
+              - `fps` is a lightweight rAF-based estimate; we pause it when the tab is hidden.
+              - Heap numbers only show on Chromium; elsewhere they read "Unknown" by design.
+            -->
+            <h4 class="text-h6 mb-2">📊 Browser Performance</h4>
             <p><strong>Estimated FPS:</strong> {{ fps }}</p>
             <p><strong>Heap Used:</strong> {{ heapUsed }} MB</p>
             <p><strong>Heap Limit:</strong> {{ heapLimit }} MB</p>
           </v-card-text>
         </v-card>
-      </v-container>
-    </v-main>
-  </v-app>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script setup>
-import { useTheme } from 'vuetify'
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+// Component logic stays minimal: we consume a single composable.
+//
+// Why this approach?
+// - The heavy lifting (feature detection, listeners, timers, cleanup) lives in
+//   utils/devMetrics.js, which is SSR/Edge-safe and cleans up after itself.
+// - This keeps the SFC presentation-first and easy to reason about.
 
-/* === THEME AWARENESS === */
-const theme = useTheme()
-const currentTheme = computed(() => theme.name.value)
-const nextTheme = computed(() => (currentTheme.value === 'dark' ? 'light' : 'dark'))
-const localStorageTheme = ref(localStorage.getItem('theme'))
+import { useDevMetrics } from './utils/devMetrics.js'
 
-function toggleTheme() {
-  const newTheme = nextTheme.value
-  theme.change(newTheme)
-  localStorage.setItem('theme', newTheme)
-  localStorageTheme.value = newTheme
-}
+// Destructure only what we render here; this helps tree-shaking and readability.
+// The composable handles: strict env for backend ping, UA-CH fallbacks, reduced-motion,
+// passive listeners, rAF cleanup, and visibility-based pausing.
+const {
+  apiData,
+  loading,
+  screenWidth,
+  hasTouch,
+  deviceType,
+  systemPrefers,
+  prefersReducedMotion,
+  userAgent,
+  platform,
+  language,
+  timezone,
+  dnt,
+  isOnline,
+  memory,
+  cpuCores,
+  anonId,
+  clearLocalStorage,
+  localStorageTheme,
+  fps,
+  heapUsed,
+  heapLimit,
+  inactivitySeconds
+} = useDevMetrics()
 
-function detectSystemPreferredTheme() {
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-}
-
-if (localStorageTheme.value) {
-  theme.change(localStorageTheme.value)
-} else {
-  const preferred = detectSystemPreferredTheme()
-  theme.change(preferred)
-  localStorage.setItem('theme', preferred)
-  localStorageTheme.value = preferred
-}
-
-/* === BACKEND HANDSHAKE === */
-const apiData = ref({})
-const loading = ref(true)
-
-onMounted(async () => {
-  try {
-    const res = await fetch(`${import.meta.env.VITE_API_BASE}/api/ping`)
-    apiData.value = await res.json()
-  } catch {
-    apiData.value = { message: '❌ Could not reach backend.' }
-  } finally {
-    loading.value = false
-  }
-})
-
-/* === DEVICE + SYSTEM AWARENESS === */
-const screenWidth = ref(window.innerWidth)
-const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0
-const deviceType = computed(() => {
-  if (screenWidth.value < 600) return 'Mobile'
-  if (screenWidth.value < 1024) return 'Tablet'
-  return 'Desktop'
-})
-const systemPrefers = ref('unknown')
-const prefersReducedMotion = ref('No')
-const userAgent = ref(navigator.userAgent)
-const platform = ref(navigator.platform)
-const language = ref(navigator.language)
-const timezone = ref(Intl.DateTimeFormat().resolvedOptions().timeZone)
-const dnt = ref(navigator.doNotTrack === '1' ? 'Enabled' : 'Disabled')
-const isOnline = ref(navigator.onLine)
-const memory = ref(navigator.deviceMemory || 'Unknown')
-const cpuCores = ref(navigator.hardwareConcurrency || 'Unknown')
-
-function updateScreen() {
-  screenWidth.value = window.innerWidth
-}
-function detectPreferences() {
-  systemPrefers.value = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'Dark Mode' : 'Light Mode'
-  prefersReducedMotion.value = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'Yes' : 'No'
-}
-
-window.addEventListener('online', () => (isOnline.value = true))
-window.addEventListener('offline', () => (isOnline.value = false))
-onMounted(() => {
-  updateScreen()
-  detectPreferences()
-  window.addEventListener('resize', updateScreen)
-})
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', updateScreen)
-})
-
-/* === INACTIVITY TRACKING === */
-const inactivitySeconds = ref(0)
-let inactivityTimer
-function resetInactivity() {
-  inactivitySeconds.value = 0
-}
-function startInactivityTimer() {
-  clearInterval(inactivityTimer)
-  inactivityTimer = setInterval(() => inactivitySeconds.value++, 1000)
-}
-const userEvents = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart']
-userEvents.forEach(event => window.addEventListener(event, resetInactivity))
-onMounted(() => {
-  resetInactivity()
-  startInactivityTimer()
-})
-onBeforeUnmount(() => {
-  clearInterval(inactivityTimer)
-  userEvents.forEach(event => window.removeEventListener(event, resetInactivity))
-})
-
-/* === LOCAL STORAGE MGMT === */
-const anonIdKey = 'anon-id'
-const anonId = ref(localStorage.getItem(anonIdKey) || crypto.randomUUID())
-localStorage.setItem(anonIdKey, anonId.value)
-function clearLocalStorage() {
-  localStorage.clear()
-  location.reload()
-}
-
-/* === PERFORMANCE === */
-const fps = ref('Calculating...')
-const heapUsed = ref('Unknown')
-const heapLimit = ref('Unknown')
-
-let frameCount = 0
-let fpsStartTime = performance.now()
-
-function estimateFPS(now) {
-  frameCount++
-  const elapsed = now - fpsStartTime
-  if (elapsed >= 1000) {
-    fps.value = Math.round((frameCount * 1000) / elapsed)
-    frameCount = 0
-    fpsStartTime = now
-  }
-  requestAnimationFrame(estimateFPS)
-}
-
-requestAnimationFrame(estimateFPS)
-
-if (performance.memory) {
-  heapUsed.value = Math.round(performance.memory.usedJSHeapSize / 1048576) // MB
-  heapLimit.value = Math.round(performance.memory.jsHeapSizeLimit / 1048576) // MB
-}
+// Tip (optional):
+// If you later add network stats from the composable (effectiveType/saveData/downlink),
+// just extend the destructuring and render another section—no extra wiring needed.
 </script>
+
+<style scoped>
+/*
+  Responsive typography strategy:
+  - We size content by "device class" (Mobile/Tablet/Desktop) at runtime,
+    keeping the visual rhythm consistent with the composable’s detection.
+  - Using rem ensures better readability across zoom levels and DPIs.
+  - Scoped styles prevent leakage to other components.
+*/
+
+.mobile-card {
+  font-size: 1.9rem;
+  line-height: 2.5;
+}
+
+.tablet-card {
+  font-size: 1.5rem;
+  line-height: 2.2;
+}
+
+.desktop-card {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* 🔠 Mobile emphasis:
+   - Larger tappable targets and stronger heading weight for small screens.
+   - These overrides are specific to the mobile-card class applied at runtime.
+*/
+.mobile-card p,
+.mobile-card h4,
+.mobile-card .v-card-title,
+.mobile-card .v-alert,
+.mobile-card .v-btn {
+  font-size: 1.8rem !important;
+}
+
+.mobile-card .v-card-title {
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.mobile-card .v-btn {
+  font-size: 1.6rem !important;
+  padding: 18px 28px !important;
+  border-radius: 12px;
+}
+
+.mobile-card .v-alert {
+  padding: 24px;
+}
+</style>

@@ -1,18 +1,13 @@
 {
-  "scannedAt": "2025-07-18T01:59:01.974Z",
+  "scannedAt": "2025-08-21T17:47:47.530Z",
   "components": [
     {
       "file": "src/App.vue",
       "templateTags": [
         "template",
-        "v-app",
-        "v-app-bar",
-        "v-toolbar-title",
-        "v-spacer",
-        "v-btn",
-        "v-icon",
-        "v-main",
         "v-container",
+        "v-row",
+        "v-col",
         "v-card",
         "v-card-title",
         "v-card-text",
@@ -22,14 +17,11 @@
         "strong",
         "v-divider",
         "h4",
-        "script"
+        "v-btn",
+        "script",
+        "style"
       ],
-      "scriptAPIs": [
-        "ref",
-        "computed",
-        "onMounted",
-        "fetch"
-      ],
+      "scriptAPIs": [],
       "description": "Vue component"
     },
     {
@@ -56,6 +48,13 @@
       "file": "src/themes/light.js",
       "exports": [],
       "description": "JS utility or plugin"
+    },
+    {
+      "file": "src/utils/devMetrics.js",
+      "exports": [
+        "useDevMetrics"
+      ],
+      "description": "JS utility or plugin"
     }
   ],
   "plugins": [
@@ -79,5 +78,9 @@
     "VSpacer",
     "VToolbarTitle"
   ],
-  "vuetifyStatus": "✅ All Vuetify components used in templates are registered."
+  "vuetifyMissing": [
+    "VCol",
+    "VRow"
+  ],
+  "vuetifyStatus": "⚠️ Some Vuetify components are used but not registered."
 }
