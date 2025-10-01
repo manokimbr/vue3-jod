@@ -39,16 +39,16 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useDisplay } from 'vuetify'
 
 export function useDevMetrics() {
-  // (A) Responsive hint via Vuetify (xs ~ mobile). Purely UI sugar.
+  // (A) Responsive hint via Vuetify (xs ~ mobile).
   const { xs } = useDisplay()
   const isMobile = computed(() => xs.value)
 
-  // (B) Neutral SSR/Edge-safe state. Do NOT read window/navigator at module top.
+  // (B) SSR/Edge-safe state
   const screenWidth = ref(0)
   const hasTouch = ref(false)
   const deviceType = ref('Unknown')
 
-  // (C) Device classification — lightweight heuristic (client-only).
+    // (C) Device classification — lightweight heuristic (client-only).
   function updateDeviceType() {
     try {
       const ua = (navigator.userAgent || '').toLowerCase()
@@ -99,8 +99,11 @@ export function useDevMetrics() {
   const connectionType = ref('Unknown')  // '4g' | '3g' | ...
   const saveData = ref('Unknown')        // 'Enabled' | 'Disabled'
   const downlink = ref('Unknown')        // Mbps
+  // Hoisted refs so mount & unmount can access the same instances
+  /** @type {any} */ let connRef = null
+  /** @type {null | (() => void)} */ let applyConn = null
 
-  // (H) FPS — requestAnimationFrame loop; cancel on unmount; pause on hidden.
+  // (H) FPS
   const fps = ref(0)
   let frameCount = 0
   let fpsStart = 0
@@ -117,8 +120,8 @@ export function useDevMetrics() {
   }
 
   // (I) JS heap (Chromium only). Firefox/Safari don’t expose performance.memory.
-  const heapUsed = ref('Unknown')  // MB
-  const heapLimit = ref('Unknown') // MB
+  const heapUsed = ref('Unknown') 
+  const heapLimit = ref('Unknown')
   let memInterval = 0
   function sampleMemory() {
     const pm = /** @type {any} */ (performance).memory
@@ -127,7 +130,7 @@ export function useDevMetrics() {
     heapLimit.value = Math.round(pm.jsHeapSizeLimit / 1048576)
   }
 
-  // (J) User inactivity — seconds since last interaction. Good UX signal.
+    // (J) User inactivity — seconds since last interaction. Good UX signal.
   const inactivitySeconds = ref(0)
   let inactivityTimer = 0
   function resetInactivity() { inactivitySeconds.value = 0 }
@@ -152,13 +155,14 @@ export function useDevMetrics() {
   function updateOnline() { isOnline.value = navigator.onLine }
 
   // (M) Dark mode / reduced motion via media queries.
-  let darkMql, motionMql
+  /** @type {MediaQueryList | undefined} */ let darkMql
+  /** @type {MediaQueryList | undefined} */ let motionMql
   function applyPrefers() {
     systemPrefers.value = darkMql?.matches ? 'Dark Mode' : 'Light Mode'
     prefersReducedMotion.value = motionMql?.matches ? 'Yes' : 'No'
   }
 
-  // (N) Theme in localStorage — reactive local ref + setter + cross-tab sync.
+  // (N) Theme in localStorage
   const localStorageTheme = ref(null)
   function onStorageChange(event) {
     if (event.key === 'theme') {
@@ -168,14 +172,14 @@ export function useDevMetrics() {
   function setTheme(next) {
     if (next == null) {
       localStorage.removeItem('theme')
-      localStorageTheme.value = null // update immediately in this tab
+      localStorageTheme.value = null
     } else {
       localStorage.setItem('theme', String(next))
-      localStorageTheme.value = String(next) // update immediately in this tab
+      localStorageTheme.value = String(next)
     }
   }
 
-  // (O) Anonymous local identity for labs/demos (optional).
+  // (O) Anonymous local identity
   const anonId = ref('')
   function getSafeUUID() {
     if (crypto?.randomUUID) return crypto.randomUUID()
@@ -188,12 +192,12 @@ export function useDevMetrics() {
 
   // (P) All Web API reads happen here (client-only).
   onMounted(async () => {
-    // 1) Basic device signals.
+    // 1) Basic device signals
     screenWidth.value = window.innerWidth
     hasTouch.value = ('ontouchstart' in window) || navigator.maxTouchPoints > 0
     updateDeviceType()
 
-    // 2) Backend ping with 5s timeout. AbortController is optional (older browsers).
+    // 2) Backend ping with timeout
     const controller = (typeof AbortController !== 'undefined') ? new AbortController() : null
     const timeoutId = controller ? setTimeout(() => controller.abort(), 5000) : null
     try {
@@ -210,7 +214,7 @@ export function useDevMetrics() {
       loading.value = false
     }
 
-    // 3) System/browser fields.
+    // 3) System/browser fields
     userAgent.value = navigator.userAgent
     language.value = navigator.language
     timezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -230,17 +234,16 @@ export function useDevMetrics() {
       }
     } catch { /* ignore */ }
 
-    // 5) Network Information API (optional; Chromium/Android).
-    const conn = /** @type {any} */ (navigator).connection
-    if (conn) {
-      const applyConn = () => {
-        connectionType.value = conn.effectiveType || 'Unknown'
-        saveData.value = conn.saveData ? 'Enabled' : 'Disabled'
-        downlink.value = (typeof conn.downlink === 'number') ? conn.downlink : 'Unknown'
+    // 5) Network Information API (Chromium/Android)
+    connRef = /** @type {any} */ (navigator).connection
+    if (connRef) {
+      applyConn = () => {
+        connectionType.value = connRef.effectiveType || 'Unknown'
+        saveData.value = connRef.saveData ? 'Enabled' : 'Disabled'
+        downlink.value = (typeof connRef.downlink === 'number') ? connRef.downlink : 'Unknown'
       }
       applyConn()
-      conn.addEventListener?.('change', applyConn)
-      onBeforeUnmount(() => conn.removeEventListener?.('change', applyConn))
+      connRef.addEventListener?.('change', applyConn)
     }
 
     // 6) Media queries: dark/motion.
@@ -250,7 +253,7 @@ export function useDevMetrics() {
     darkMql?.addEventListener?.('change', applyPrefers)
     motionMql?.addEventListener?.('change', applyPrefers)
 
-    // 7) Global listeners (passive where it helps).
+    // 7) Global listeners
     window.addEventListener('resize', onResize)
     window.addEventListener('online', updateOnline)
     window.addEventListener('offline', updateOnline)
@@ -261,7 +264,7 @@ export function useDevMetrics() {
     })
     window.addEventListener('storage', onStorageChange)
 
-    // 8) Timers/loops.
+    // 8) Timers/loops
     inactivityTimer = window.setInterval(() => inactivitySeconds.value++, 1000)
     fpsStart = performance.now()
     rafId = requestAnimationFrame(tick)
@@ -271,23 +274,28 @@ export function useDevMetrics() {
       memInterval = window.setInterval(sampleMemory, ms)
     }
 
-    // 9) Anonymous ID + initial theme.
+    // 9) Anonymous ID + initial theme
     const key = 'anon-id'
     anonId.value = localStorage.getItem(key) || getSafeUUID()
     localStorage.setItem(key, anonId.value)
-
     localStorageTheme.value = localStorage.getItem('theme')
   })
 
-  // (Q) Full cleanup. No leaks. Safe to import anywhere (SSR/Edge).
+  // (Q) Full cleanup. No leaks.
   onBeforeUnmount(() => {
     if (resizeTimeout) clearTimeout(resizeTimeout)
-    window.removeEventListener('resize', onResize)
-    window.removeEventListener('online', updateOnline)
-    window.removeEventListener('offline', updateOnline)
-    document.removeEventListener('visibilitychange', onVisibilityChange)
-    userEvents.forEach(e => window.removeEventListener(e, resetInactivity))
-    window.removeEventListener('storage', onStorageChange)
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('resize', onResize)
+      window.removeEventListener('online', updateOnline)
+      window.removeEventListener('offline', updateOnline)
+      window.removeEventListener('storage', onStorageChange)
+    }
+    if (typeof document !== 'undefined') {
+      document.removeEventListener('visibilitychange', onVisibilityChange)
+    }
+    if (connRef && applyConn) {
+      connRef.removeEventListener?.('change', applyConn)
+    }
     if (darkMql) darkMql.removeEventListener?.('change', applyPrefers)
     if (motionMql) motionMql.removeEventListener?.('change', applyPrefers)
     if (inactivityTimer) clearInterval(inactivityTimer)
@@ -298,12 +306,11 @@ export function useDevMetrics() {
   // (R) Public helpers.
   function clearLocalStorage() {
     localStorage.clear()
-    // storage event won't fire in the same tab — update local ref explicitly.
     localStorageTheme.value = null
     location.reload()
   }
 
-  // (S) API returned to the consuming component.
+  // (S) API returned
   return {
     // layout/device
     isMobile, screenWidth, hasTouch, deviceType,
@@ -315,7 +322,7 @@ export function useDevMetrics() {
     systemPrefers, prefersReducedMotion, userAgent, platform,
     language, timezone, dnt, isOnline, memory, cpuCores,
 
-    // network (when supported)
+    // network
     connectionType, saveData, downlink,
 
     // identity/theme
